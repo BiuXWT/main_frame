@@ -3,21 +3,23 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <pthread.h>
+#include <string.h>
+#include <fcntl.h>
 #include <sys/types.h>
 
 #ifdef DEBUG
-#define LOG(format, ...) fprintf(stdout, ">>>>>" format "<<<<", ##__VA_ARGS__)
+#define LOG(format, ...) fprintf(stdout, ">>>>>" format "<<<<\n", ##__VA_ARGS__)
 #else
 #define LOG(format, ...)
 #endif
 
-pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t g_cond = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t g_mutex ;
+pthread_cond_t   g_cond ;
 
 void sighandler(int signo)
 {
     int status;
-    pthread_cond_signal(g_cond);
+    pthread_cond_signal(&g_cond);
     LOG("recv signal %d", signo);
 }
 void childsighandler(int signo)
@@ -30,10 +32,10 @@ void childsighandler(int signo)
     }
 }
 
-void procsig()
+inline void procsig()
 {
     struct sigaction act;
-    act.sa_handler = SIGIGN;
+    act.sa_handler = SIG_IGN;
     sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
     sigaction(SIGINT, &act, NULL);
@@ -52,13 +54,17 @@ void procsig()
     sigaction(SIGUSR1, &act, NULL);
 }
 
-void control(int argc, char **argv)
+inline void control(int argc, char **argv)
 {
+    int lockfd;
+    char szBuff[128];
+    char szPid[128];
+    int iRetVal;
     if (argc != 2)
     {
-        LOG("Usage: %s <cmd> \n", argv[0]);
-        LOG("    start:        start %s. \n", argv[0]);
-        LOG("    stop:         stop %s. \n", argv[0]);
+        LOG("Usage: %s <cmd> ", argv[0]);
+        LOG("    start:        start %s. ", argv[0]);
+        LOG("    stop:         stop %s. ", argv[0]);
         exit(0);
     }
 
@@ -99,27 +105,31 @@ void control(int argc, char **argv)
     }
     else
     {
-        LOG("command error\n\n");
+        LOG("command error");
         exit(-1);
     }
 }
 
 int main(int argc, char **argv)
 {
+    pthread_mutex_init(&g_mutex,NULL);
+    pthread_cond_init(&g_cond ,NULL);
     procsig();
     control(argc,argv);
+
 
     //TODO ... 功能处理
 
 
     //阻塞主线程
+    sleep(2);
     pthread_mutex_lock(&g_mutex);
     pthread_cond_wait(&g_cond,&g_mutex);
     pthread_mutex_unlock(&g_mutex);
 
     //TODO ... 资源回收
 
-    LOG("%s stopped...\n")
+    LOG("%s stopped...",argv[0]);
 
     return 0;
 }
