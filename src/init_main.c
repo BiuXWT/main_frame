@@ -14,7 +14,7 @@ void childsighandler(int signo)
 {
 	pid_t pid;
 	int stat;
-	while (pid = waitpid(-1, &stat, WNOHANG) > 0)
+	while ((pid = waitpid(-1, &stat, WNOHANG)) > 0)
 	{
 		LOG("child pid [%d] exit.", pid);
 	}
@@ -87,6 +87,7 @@ inline void control(int argc, char **argv)
 		}
 		memset(szPid, 0x00, sizeof(szPid));
 		iRetVal = read(lockfd, szPid, sizeof(szPid));
+		LOG("pid = %s", szPid);
 		close(lockfd);
 		kill(atoi(szPid), SIGUSR1);
 		exit(0);
