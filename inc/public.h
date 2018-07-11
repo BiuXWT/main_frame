@@ -19,4 +19,12 @@
 
 
 
+
+#ifdef _DEBUG_MAIN
+#define LOG(format, ...) fprintf(stdout, ">>>>>" format "<<<<\n", ##__VA_ARGS__)
+#else
+#define LOG(format, ...)
+#endif
+
+
 #endif
