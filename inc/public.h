@@ -12,16 +12,11 @@
 #include<sys/types.h>          
 #include<sys/socket.h>
 #include<sys/wait.h>
-
-//user file
-
-#include "init_main.h"
-
-
+#include<errno.h>
 
 
 #ifdef _DEBUG_MAIN
-#define LOG(format, ...) fprintf(stdout, ">>>>>" format "<<<<\n", ##__VA_ARGS__)
+#define LOG(format, ...) fprintf(stdout, "%s-%s-%d >>>>>" format "<<<<\n",__FILE__,__FUNCTION__,__LINE__, ##__VA_ARGS__)
 #else
 #define LOG(format, ...)
 #endif

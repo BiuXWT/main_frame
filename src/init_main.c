@@ -6,7 +6,6 @@ pthread_cond_t   g_cond;
 
 void sighandler(int signo)
 {
-	int status;
 	pthread_cond_signal(&g_cond);
 	LOG("recv signal %d", signo);
 }
@@ -97,4 +96,15 @@ inline void control(int argc, char **argv)
 		LOG("command error");
 		exit(-1);
 	}
+}
+
+int srv_init()
+{
+
+	return 0;
+}
+
+int srv_release()
+{
+	return 0;
 }

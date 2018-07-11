@@ -2,3 +2,7 @@
 bin/lockfile.lock
 bin/mainframe
 /.vs
+/src/init_main.o
+/src/main.o
+/CppProperties.json
+/lockfile.lock

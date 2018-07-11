@@ -1,0 +1,11 @@
+{
+  "mod1": {
+    "name": "ls",
+    "arg": "-lat"
+  },
+  "mod2": {
+    "name": "ps",
+    "arg": "aux"
+  }
+
+}
