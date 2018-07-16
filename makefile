@@ -6,13 +6,13 @@ SOURCES = $(wildcard $(SRC)/*.c ${SHARE}/*.c)
 OBJS = $(patsubst %.c, %.o, $(SOURCES))
 LSTS = $(patsubst %.c, %.lst, $(SOURCES))
 
-#API_PATH = ./bwutils
-#API_SRC = $(wildcard $(API_PATH)/*.c ${SHARE}/*.c)
-#API_OBJS = $(patsubst %.c, %.o, $(API_SRC))
+THIRD_LIB_PATH = ./third_lib/src
+THIRD_LIB_SRC = $(wildcard $(API_PATH)/*.c ${SHARE}/*.c)
+THIRD_LIB_OBJS = $(patsubst %.c, %.o, $(API_SRC))
 #API_LSTS = $(patsubst %.c, %.lst, $(API_SRC))
 
 EXTRAINCDIRS = ./inc
-#EXTRAINCDIRS =
+EXTRAINCDIRS += ./third_lib/inc
 #EXTRAINCDIRS += ./bwutils
 #EXTRAINCDIRS += ./h
 #EXTRAINCDIRS += ./h/bwinc

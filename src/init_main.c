@@ -1,12 +1,31 @@
 #include "init_main.h"
 #include "public.h"
 
-pthread_mutex_t g_mutex;
-pthread_cond_t   g_cond;
+MainLck g_lock = { 0,PTHREAD_MUTEX_INITIALIZER,PTHREAD_COND_INITIALIZER,main_lock_wait,main_lock_signal };
+
+
+inline void main_lock_wait(struct _main_lock* pthis)
+{
+	pthread_mutex_lock(&pthis->m_mutex);
+	pthread_cond_wait(&pthis->m_cond, &pthis->m_mutex);
+	pthread_mutex_unlock(&pthis->m_mutex);
+}
+
+inline void main_lock_signal(struct _main_lock * pthis)
+{
+	pthread_mutex_lock(&pthis->m_mutex);
+	pthread_cond_signal(&pthis->m_cond);
+	pthread_mutex_unlock(&pthis->m_mutex);
+}
+
+MainLck* get_g_lock()
+{
+	return &g_lock;
+}
 
 void sighandler(int signo)
 {
-	pthread_cond_signal(&g_cond);
+	g_lock.signal(&g_lock);
 	LOG("recv signal %d", signo);
 }
 void childsighandler(int signo)
@@ -19,7 +38,7 @@ void childsighandler(int signo)
 	}
 }
 
-void procsig()
+void signal_init()
 {
 	struct sigaction act;
 	act.sa_handler = SIG_IGN;
@@ -41,7 +60,7 @@ void procsig()
 	sigaction(SIGUSR1, &act, NULL);
 }
 
-inline void control(int argc, char **argv)
+inline void comand(int argc, char **argv)
 {
 	int lockfd;
 	char szBuff[128];

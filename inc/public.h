@@ -15,8 +15,13 @@
 #include<errno.h>
 
 
+//third party libs
+
+#include<cJSON.h>
+
+
 #ifdef _DEBUG_MAIN
-#define LOG(format, ...) fprintf(stdout, "%s-%s-%d >>>>>" format "<<<<\n",__FILE__,__FUNCTION__,__LINE__, ##__VA_ARGS__)
+#define LOG(format, ...) fprintf(stdout, ">>>>>[%s]-[%s]-[%d] " format "<<<<\n",__FILE__,__FUNCTION__,__LINE__, ##__VA_ARGS__)
 #else
 #define LOG(format, ...)
 #endif
