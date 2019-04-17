@@ -28,7 +28,7 @@ void sighandler(int signo)
 	g_lock.signal(&g_lock);
 	LOG("recv signal %d", signo);
 }
-void childsighandler(int signo)
+inline void childsighandler(int signo)
 {
 	pid_t pid;
 	int stat;
@@ -38,7 +38,7 @@ void childsighandler(int signo)
 	}
 }
 
-void signal_init()
+inline void signal_init()
 {
 	struct sigaction act;
 	act.sa_handler = SIG_IGN;
